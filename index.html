@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!-- ABOUTME: Retention RevOps scorecard — 6 uniformly-formatted metric cards (Total Revenue = core) over live Shopify data, -->
-<!-- ABOUTME: with retention-roadmap initiatives mapped to each metric. Metrics update per period; retest interim, avg-products in development. -->
+<!-- ABOUTME: Retention RevOps scorecard — 6 uniform metric cards over live Shopify data + a retention-roadmap initiatives table -->
+<!-- ABOUTME: with metric/owner/initiative filters, category owners, launch quarter, and expected-impact / change-since-launch / notes. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -32,6 +32,7 @@
     font:inherit;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;}
   .chip.on{background:#000;color:#fff;border-color:#000;}
   .chip.sm{height:30px;padding:0 13px;font-size:12.5px;}
+  .chip .cdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle;}
   .note{font-size:12.5px;color:var(--muted);margin:2px 0 16px;min-height:16px;}
   .note b{color:var(--muted2);font-weight:500;}
 
@@ -41,16 +42,12 @@
   .panel-h .r{font-size:13px;font-weight:300;color:var(--muted2);}
   .panel-h .r b{font-weight:500;color:#000;}
 
-  /* ===== KPI grid — every card identical: name+badge+ⓘ / value / trend / context ===== */
+  /* KPI grid — every card identical: name+badge+ⓘ / value / trend / context */
   .kpis{display:grid;grid-template-columns:repeat(6,1fr);}
-  .mcard{position:relative;text-align:left;background:#fff;color:#000;font:inherit;cursor:pointer;
+  .mcard{position:relative;text-align:left;background:#fff;color:#000;font:inherit;cursor:default;
     border:none;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
-    padding:18px 18px 20px;display:flex;flex-direction:column;box-shadow:inset 0 -3px 0 0 transparent;min-height:184px;}
-  .mcard:hover{background:#fafafa;}
-  .mcard.sel{background:#f7f7f8;box-shadow:inset 0 -3px 0 0 #000;}
+    padding:18px 18px 20px;display:flex;flex-direction:column;min-height:184px;}
   .mcard.core{background:#141821;color:#fff;}
-  .mcard.core:hover{background:#1b2130;}
-  .mcard.core.sel{box-shadow:inset 0 -3px 0 0 #5eead4;}
   .m-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;min-height:44px;}
   .m-name{font-size:12px;font-weight:500;color:var(--muted);line-height:1.3;}
   .mcard.core .m-name{color:#aeb4c2;}
@@ -58,7 +55,6 @@
   .m-badge{font-size:8px;font-weight:800;letter-spacing:.04em;padding:2px 5px;border-radius:4px;white-space:nowrap;}
   .m-badge.live{background:var(--greenBg);color:var(--green);}
   .m-badge.interim{background:var(--blueBg);color:var(--blue);}
-  .m-badge.placeholder{background:var(--amberBg);color:var(--amber);}
   .mcard.core .m-badge.core{background:#5eead4;color:#0f3d3a;}
   .m-val{font-size:28px;font-weight:400;letter-spacing:-.015em;margin-top:8px;line-height:1.05;}
   .m-trend{font-size:11.5px;font-weight:400;margin-top:7px;}
@@ -68,54 +64,60 @@
   .mcard.core .m-ctx{color:#8b93a6;}
 
   .i{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;
-    background:#e2e2e6;color:#5b5c66;font-size:9px;font-weight:700;font-style:italic;font-family:Georgia,serif;
-    cursor:pointer;user-select:none;flex:none;}
+    background:#e2e2e6;color:#5b5c66;font-size:9px;font-weight:700;font-style:italic;font-family:Georgia,serif;cursor:pointer;user-select:none;flex:none;}
   .i:hover{background:#000;color:#fff;}
   .mcard.core .i{background:#2b3346;color:#c7ccd8;}
-  .mcard.core .i:hover{background:#fff;color:#141821;}
   #tip{position:fixed;z-index:99;max-width:300px;background:#141821;color:#e9eaee;font-size:12px;line-height:1.5;
     padding:13px 15px;border-radius:10px;box-shadow:0 10px 34px rgba(0,0,0,.3);display:none;}
 
-  /* initiatives */
-  .inits{padding:26px 28px 30px;}
-  .inits-h{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px;}
-  .inits-h .t{font-size:18px;font-weight:500;}
-  .focus-chips{display:flex;gap:6px;flex-wrap:wrap;}
-  .thead,.trow{display:grid;grid-template-columns:2.1fr 0.9fr 1.4fr 1fr 0.9fr 0.7fr 1.2fr;align-items:center;}
-  .thead{padding:0 0 10px;border-bottom:1px solid var(--line);
-    font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
-  .trow{padding:14px 0;border-bottom:1px solid var(--line2);}
-  .trow .nm{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:400;}
-  .trow .nm .sdot{width:7px;height:7px;border-radius:50%;flex:none;}
-  .stage{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:9999px;
-    border:1px solid;font-size:11.5px;font-weight:500;white-space:nowrap;}
-  .stage .pd{width:6px;height:6px;border-radius:50%;}
-  .st-Done{color:var(--green);background:var(--greenBg);border-color:var(--greenBg);}
-  .st-Now{color:#000;background:#fff;border-color:#cfd0d4;}
-  .st-Next{color:var(--blue);background:var(--blueBg);border-color:#d5e3e7;}
-  .st-Later{color:var(--muted);background:#f4f4f5;border-color:var(--line);}
-  .drives,.owner{font-size:13px;font-weight:300;color:var(--muted2);}
-  .tgt{font-size:13.5px;font-weight:500;}
-  .tgt.ph{color:var(--muted);font-weight:400;font-style:italic;}
-  .act{font-size:13.5px;font-weight:500;color:var(--muted);}
-  .prog{display:flex;align-items:center;gap:10px;}
-  .prog .bar{flex:1;height:6px;background:var(--line);}
-  .prog .bar .fill{height:6px;background:#000;}
-  .prog .pv{font-size:12px;font-weight:500;width:30px;text-align:right;color:var(--muted);}
+  /* initiatives + filters */
+  .inits{padding:24px 28px 30px;}
+  .inits-h{font-size:18px;font-weight:500;margin-bottom:16px;}
+  .filters{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+  .fgroup{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .fglabel{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);width:74px;flex:none;}
+  .chiprow{display:flex;gap:6px;flex-wrap:wrap;}
+  /* initiatives dropdown */
+  .ddwrap{position:relative;}
+  .ddbtn{height:30px;padding:0 13px;border-radius:9999px;border:1px solid #cfd0d4;background:#fff;font:inherit;font-size:12.5px;font-weight:500;cursor:pointer;}
+  .ddbtn.on{background:#000;color:#fff;border-color:#000;}
+  .ddpanel{position:absolute;top:36px;left:0;z-index:20;background:#fff;border:1px solid var(--line);border-radius:10px;
+    box-shadow:0 10px 34px rgba(0,0,0,.16);padding:8px;width:340px;max-height:320px;overflow:auto;display:none;}
+  .ddpanel.open{display:block;}
+  .ddclear{width:100%;text-align:left;background:none;border:none;border-bottom:1px solid var(--line);padding:6px 8px;font:inherit;font-size:11.5px;font-weight:600;color:var(--blue);cursor:pointer;margin-bottom:4px;}
+  .ddrow{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;font-size:13px;cursor:pointer;}
+  .ddrow:hover{background:#f4f4f5;}
+  .ddrow .box{width:15px;height:15px;border:1.5px solid #cfd0d4;border-radius:4px;flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#fff;}
+  .ddrow.on .box{background:#000;border-color:#000;}
+
+  .table-scroll{overflow-x:auto;}
+  .thead,.trow{display:grid;grid-template-columns:1.9fr 0.95fr 0.95fr 0.7fr 0.95fr 1.15fr 0.95fr 1.25fr;align-items:center;min-width:1080px;gap:0 10px;}
+  .thead{padding:0 0 10px;border-bottom:1px solid var(--line);font-size:11px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);}
+  .trow{padding:13px 0;border-bottom:1px solid var(--line2);}
+  .trow .nm{font-size:13.5px;font-weight:400;}
+  .badge{display:inline-flex;align-items:center;gap:6px;height:23px;padding:0 9px;border-radius:9999px;font-size:11px;font-weight:600;white-space:nowrap;}
+  .st-Launched{background:var(--greenBg);color:var(--green);}
+  .st-InProgress{background:var(--blueBg);color:var(--blue);}
+  .st-Planned{background:#f1f1f3;color:var(--muted);}
+  .own-Lifecycle{background:#eef2ff;color:#4f46e5;} .dot-Lifecycle{background:#4f46e5;}
+  .own-CX{background:#fef3c7;color:#b45309;} .dot-CX{background:#b45309;}
+  .own-Product{background:#cffafe;color:#0e7490;} .dot-Product{background:#0e7490;}
+  .own-Ecom{background:#f3e8ff;color:#7c3aed;} .dot-Ecom{background:#7c3aed;}
+  .own-Community{background:#dcfce7;color:#15803d;} .dot-Community{background:#15803d;}
+  .own-Ops{background:#e7e5e4;color:#57534e;} .dot-Ops{background:#57534e;}
+  .qtr{font-size:13px;font-weight:500;color:var(--muted2);}
+  .qtr.tbd{color:#a7a8b3;font-weight:400;font-style:italic;}
+  .drives{font-size:12.5px;font-weight:400;color:var(--muted2);}
+  .exp{font-size:12.5px;color:var(--muted2);} .exp.ph{color:#a7a8b3;font-style:italic;}
+  .delta{font-size:12.5px;} .delta.meas{color:var(--blue);} .delta.na{color:#a7a8b3;}
+  .note-c{font-size:12px;color:var(--muted);} .note-c.ph{color:#c2c3cc;font-style:italic;}
   .empty{padding:22px 0 4px;font-size:13px;color:var(--muted);}
 
   .foot{margin-top:20px;font-size:12px;color:var(--muted);line-height:1.7;}
   .foot .lg{display:inline-block;font-size:8.5px;font-weight:800;letter-spacing:.05em;padding:2px 6px;border-radius:4px;vertical-align:middle;margin:0 2px;}
-  .foot .lg.live{background:var(--greenBg);color:var(--green);}
-  .foot .lg.intr{background:var(--blueBg);color:var(--blue);}
-  .foot .lg.ph{background:var(--amberBg);color:var(--amber);}
+  .foot .lg.live{background:var(--greenBg);color:var(--green);} .foot .lg.intr{background:var(--blueBg);color:var(--blue);}
 
-  @media(max-width:1000px){
-    .kpis{grid-template-columns:repeat(3,1fr);}
-    .thead{display:none;}
-    .trow{grid-template-columns:1fr 1fr;gap:6px 12px;padding:14px 0;}
-    .trow .nm{grid-column:1 / -1;}
-  }
+  @media(max-width:1000px){ .kpis{grid-template-columns:repeat(3,1fr);} }
   @media(max-width:560px){ .kpis{grid-template-columns:repeat(2,1fr);} }
 </style>
 </head>
@@ -124,14 +126,8 @@
 <div class="wrap">
 
   <div class="head-row">
-    <div>
-      <div class="eyebrow">Retention RevOps</div>
-      <h1>Retention &amp; expansion scorecard</h1>
-    </div>
-    <div class="period-cap">
-      <div class="k">Reporting period</div>
-      <div class="v" id="periodLabel">This Month</div>
-    </div>
+    <div><div class="eyebrow">Retention RevOps</div><h1>Retention &amp; expansion scorecard</h1></div>
+    <div class="period-cap"><div class="k">Reporting period</div><div class="v" id="periodLabel">This Month</div></div>
   </div>
 
   <div class="controls">
@@ -143,20 +139,26 @@
   <div class="panel">
     <div class="panel-h">
       <div class="t">Top metrics</div>
-      <div class="r"><b>3 live</b> · updated for the selected period</div>
+      <div class="r"><b>Live</b> metrics update with the selected period</div>
     </div>
-
     <div class="kpis" id="kpis"></div>
 
     <div class="inits">
-      <div class="inits-h">
-        <div class="t">Initiatives driving these metrics</div>
-        <div class="focus-chips" id="focusChips"></div>
+      <div class="inits-h">Initiatives driving these metrics</div>
+      <div class="filters">
+        <div class="fgroup"><span class="fglabel">Metric</span><div class="chiprow" id="metricChips"></div></div>
+        <div class="fgroup"><span class="fglabel">Owner</span><div class="chiprow" id="ownerChips"></div></div>
+        <div class="fgroup"><span class="fglabel">Initiatives</span>
+          <div class="ddwrap"><button class="ddbtn" id="ddBtn" data-ddbtn>All initiatives ▾</button><div class="ddpanel" id="ddPanel"></div></div>
+        </div>
       </div>
-      <div class="thead">
-        <div>Initiative</div><div>Stage</div><div>Drives</div><div>Owner</div><div>Target</div><div>Actual</div><div>Progress to target</div>
+      <div class="table-scroll">
+        <div class="thead">
+          <div>Initiative</div><div>Status</div><div>Owner</div><div>Quarter</div><div>Drives</div>
+          <div>Expected impact</div><div>Δ since launch</div><div>Note</div>
+        </div>
+        <div id="initRows"></div>
       </div>
-      <div id="initRows"></div>
     </div>
   </div>
 
@@ -175,131 +177,151 @@ const PERIODS = {
 const ORDER = ['month','lastmonth','week','q2','ytd'];
 const LTV = '$473';
 const RETENTION_GOAL = 60;
-let state = { period:'month', focus:null };
 
-// Public-facing definitions — self-contained, no personal notes.
 const SRC = {
   total:"Total revenue across all sales channels for the selected period. FY2026 target: $45M; year-to-date pacing $6.0M behind plan. Source: Shopify.",
   retention:"Subscription revenue as a share of total revenue for the selected period. The company's broader retention-revenue figure (all returning-customer revenue) is tracked separately and reads higher; the 60% goal reflects that broader definition. Source: Shopify.",
   aov:"Average order value for the selected period, across all sales channels. Source: Shopify.",
   ltv:"All-time blended lifetime revenue per customer (total revenue ÷ total customers). Source: Shopify.",
   retest:"Share of customers with released results who have retested (results released for more than one kit), all-time. A period-based version is in development. Source: Klaviyo.",
-  avgproducts:"Average number of active subscription products per subscriber. In development from subscription data.",
+  attach:"Share of released results that convert to a supplement subscription (results → supplement attach). A period-based version is in development. Source: Tableau.",
 };
 
-const INITIATIVES = [
-  { name:'Friends & Family review campaign (Amazon)',     stage:'Later', drives:'total',       owner:'Marketing' },
-  { name:'Claims refresh — science-backed 90-day claims', stage:'Later', drives:'total',       owner:'Juan / Lan' },
-  { name:'Okendo referral program ($50/$50)',             stage:'Now',   drives:'total',       owner:'Marketing' },
-  { name:'Okendo review program',                         stage:'Done',  drives:'total',       owner:'Marketing' },
-  { name:'While You Wait experience launch',              stage:'Done',  drives:'retention',   owner:'Marissa' },
-  { name:'Clienteling SMS (72-hr post-results)',          stage:'Done',  drives:'retention',   owner:'Marketing' },
-  { name:'FullStory + Klaviyo prep (behavior triggers)',  stage:'Next',  drives:'retention',   owner:'Marissa / Sean' },
-  { name:'Wrapped launch w/ personalized hints',          stage:'Later', drives:'retention',   owner:'Sean' },
-  { name:"Post-Wrapped 'cliff' contingency",              stage:'Later', drives:'retention',   owner:'Sean' },
-  { name:'Open House On Demand',                          stage:'Later', drives:'retention',   owner:'Lisa' },
-  { name:'Peacock prompting (community/social)',          stage:'Later', drives:'retention',   owner:'Unassigned' },
-  { name:'Loyalty & Streaks program design',              stage:'Later', drives:'retention',   owner:'Elisabeth' },
-  { name:'Cancel-flow A/B → Klaviyo churn/win-back',      stage:'Later', drives:'retention',   owner:'Lifecycle' },
-  { name:'Personalized Winback Flow',                     stage:'Later', drives:'retention',   owner:'Unassigned' },
-  { name:'Improve upsell email flows',                    stage:'Next',  drives:'aov',         owner:'Marissa' },
-  { name:'PostPilot direct mail (unattached customers)',  stage:'Later', drives:'aov',         owner:'Keri' },
-  { name:'Campaign: time-limited fall reset attach drive',stage:'Later', drives:'avgproducts', owner:'Keri' },
-  { name:'Loop bundling: 3 & 6-month progressive discounts',stage:'Later',drives:'avgproducts',owner:'Elizabeth' },
-];
-const DRIVES_NAME = { total:'Total Revenue', retention:'Retention', aov:'AOV', ltv:'LTV', avgproducts:'Avg products/sub', retest:'Retest Rate' };
+const OWNERS = ['Lifecycle','CX','Product','Ecom','Community','Ops'];
+const DRIVES_NAME = { total:'Total Revenue', retention:'Retention', aov:'AOV', ltv:'LTV', retest:'Retest Rate', attach:'Attach Rate' };
 
-/* ============ RENDER ============ */
+// Retention roadmap (airfocus). status: Planned / In Progress / Launched. owner = team category. quarter = launch quarter (from airfocus; TBD where unset).
+// Expected impact / Δ-since-launch / Note are owner-maintained fields (placeholders until populated).
+const INITIATIVES = [
+  { name:'Clienteling SMS (72-hr post-results)',            status:'Launched',    owner:'Lifecycle', quarter:'Q2 2026', drives:'attach' },
+  { name:'While You Wait experience launch',                status:'Launched',    owner:'Lifecycle', quarter:'Q2 2026', drives:'retention' },
+  { name:'Okendo review program',                           status:'Launched',    owner:'Lifecycle', quarter:'Q2 2026', drives:'total' },
+  { name:'Okendo referral program ($50/$50)',               status:'In Progress', owner:'Lifecycle', quarter:'Q2 2026', drives:'total' },
+  { name:'Improve upsell email flows',                      status:'In Progress', owner:'Lifecycle', quarter:'TBD',     drives:'aov' },
+  { name:'FullStory + Klaviyo prep (behavior triggers)',    status:'In Progress', owner:'Lifecycle', quarter:'TBD',     drives:'retention' },
+  { name:'PostPilot direct mail (unattached customers)',    status:'Planned',     owner:'Lifecycle', quarter:'TBD',     drives:'attach' },
+  { name:'Loop bundling: 3 & 6-month progressive discounts',status:'Planned',     owner:'Ecom',      quarter:'TBD',     drives:'ltv' },
+  { name:'Wrapped launch w/ personalized hints',            status:'Planned',     owner:'Product',   quarter:'TBD',     drives:'attach' },
+  { name:'Campaign: time-limited fall reset attach drive',  status:'Planned',     owner:'Lifecycle', quarter:'TBD',     drives:'attach' },
+  { name:"Post-Wrapped 'cliff' contingency",                status:'Planned',     owner:'Product',   quarter:'TBD',     drives:'retention' },
+  { name:'Friends & Family review campaign (Amazon)',       status:'Planned',     owner:'Lifecycle', quarter:'TBD',     drives:'total' },
+  { name:'Open House On Demand',                            status:'Planned',     owner:'Community', quarter:'TBD',     drives:'retention' },
+  { name:'Peacock prompting (community/social)',            status:'Planned',     owner:'Community', quarter:'TBD',     drives:'retest' },
+  { name:'Claims refresh — science-backed 90-day claims',   status:'Planned',     owner:'Ops',       quarter:'TBD',     drives:'total' },
+  { name:'Loyalty & Streaks program design',                status:'Planned',     owner:'Lifecycle', quarter:'TBD',     drives:'ltv' },
+  { name:'Cancel-flow A/B → Klaviyo churn/win-back',        status:'Planned',     owner:'CX',        quarter:'TBD',     drives:'retention' },
+  { name:'Personalized Winback Flow',                       status:'Planned',     owner:'Lifecycle', quarter:'TBD',     drives:'retention' },
+];
+
+let state = { period:'month', metric:null, owners:new Set(), inits:new Set(), ddOpen:false };
+
+/* ============ RENDER: metric cards ============ */
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function trend(t){ if(t===null||t===undefined) return `<span class="flat">—</span>`;
   const up=(typeof t==='number')?t>=0:/^\+/.test(t);
   const txt=(typeof t==='number')?(t>=0?'▲ +':'▼ ')+Math.abs(t).toFixed(1)+'%':(/^\+/.test(t)?'▲ ':'▼ ')+t.replace(/^[+−-]/,'');
   return `<span class="${up?'up':'down'}">${txt} vs prior</span>`; }
-
-// Uniform card: name+badge+ⓘ / value / trend / context
-function card(c){
-  return `<div class="mcard ${c.core?'core':''}" data-focus="${c.focus}">
-    <div class="m-top"><span class="m-name">${c.name}</span>
-      <span class="m-tools"><span class="m-badge ${c.badgeCls}">${c.badge}</span><span class="i" data-tip="${c.tip}">i</span></span></div>
-    <div class="m-val">${c.value}</div>
-    <div class="m-trend">${c.trend}</div>
-    <div class="m-ctx"${c.ctxColor?` style="color:${c.ctxColor}"`:''}>${c.ctx}</div>
-  </div>`;
-}
+function card(c){ return `<div class="mcard ${c.core?'core':''}">
+  <div class="m-top"><span class="m-name">${c.name}</span>
+    <span class="m-tools"><span class="m-badge ${c.badgeCls}">${c.badge}</span><span class="i" data-tip="${c.tip}">i</span></span></div>
+  <div class="m-val">${c.value}</div><div class="m-trend">${c.trend}</div>
+  <div class="m-ctx"${c.ctxColor?` style="color:${c.ctxColor}"`:''}>${c.ctx}</div></div>`; }
 
 function renderKpis(){
-  const p = PERIODS[state.period];
-  const gap = (RETENTION_GOAL - p.retention.pct).toFixed(1);
-  const retC = p.retention.pct>=RETENTION_GOAL ? 'var(--green)' : (p.retention.pct>=53?'var(--amber)':'var(--red)');
-  const cards = [
-    { core:true, focus:'total', name:'Total Revenue', badge:'CORE', badgeCls:'core', tip:'total',
-      value:p.total.v, trend:trend(p.total.t), ctx:'FY26 target $45M · −$6.0M behind', ctxColor:'#ff8a94' },
-    { focus:'retention', name:'Retention Revenue', badge:'LIVE', badgeCls:'live', tip:'retention',
-      value:p.retention.pct.toFixed(1)+'%', trend:trend(p.retention.t), ctx:`Goal ${RETENTION_GOAL}% · at risk (−${gap}pp)`, ctxColor:retC },
-    { focus:'aov', name:'AOV', badge:'LIVE', badgeCls:'live', tip:'aov',
-      value:p.aov.v, trend:trend(p.aov.t), ctx:'across all channels' },
-    { focus:'ltv', name:'LTV', badge:'LIVE', badgeCls:'live', tip:'ltv',
-      value:LTV, trend:'<span class="flat">all-time</span>', ctx:'blended lifetime / customer' },
-    { focus:'retest', name:'Retest Rate', badge:'INTERIM', badgeCls:'interim', tip:'retest',
-      value:'17.0%', trend:'<span class="flat">all-time</span>', ctx:'period view in development', ctxColor:'var(--blue)' },
-    { focus:'avgproducts', name:'Avg Products / Subscriber', badge:'PENDING', badgeCls:'placeholder', tip:'avgproducts',
-      value:'1.4', trend:'<span class="flat">—</span>', ctx:'in development', ctxColor:'var(--amber)' },
+  const p=PERIODS[state.period]; const gap=(RETENTION_GOAL-p.retention.pct).toFixed(1);
+  const retC=p.retention.pct>=RETENTION_GOAL?'var(--green)':(p.retention.pct>=53?'var(--amber)':'var(--red)');
+  const cards=[
+    { core:true, name:'Total Revenue', badge:'CORE', badgeCls:'core', tip:'total', value:p.total.v, trend:trend(p.total.t), ctx:'FY26 target $45M · −$6.0M behind', ctxColor:'#ff8a94' },
+    { name:'Retention Revenue', badge:'LIVE', badgeCls:'live', tip:'retention', value:p.retention.pct.toFixed(1)+'%', trend:trend(p.retention.t), ctx:`Goal ${RETENTION_GOAL}% · at risk (−${gap}pp)`, ctxColor:retC },
+    { name:'AOV', badge:'LIVE', badgeCls:'live', tip:'aov', value:p.aov.v, trend:trend(p.aov.t), ctx:'across all channels' },
+    { name:'LTV', badge:'LIVE', badgeCls:'live', tip:'ltv', value:LTV, trend:'<span class="flat">all-time</span>', ctx:'blended lifetime / customer' },
+    { name:'Retest Rate', badge:'INTERIM', badgeCls:'interim', tip:'retest', value:'17.0%', trend:'<span class="flat">all-time</span>', ctx:'period view in development', ctxColor:'var(--blue)' },
+    { name:'Attach Rate', badge:'INTERIM', badgeCls:'interim', tip:'attach', value:'29.1%', trend:'<span class="flat">Q1 2026</span>', ctx:'results → supplement · in development', ctxColor:'var(--blue)' },
   ];
-  document.getElementById('kpis').innerHTML = cards.map(card).join('');
+  document.getElementById('kpis').innerHTML=cards.map(card).join('');
 }
 
-function renderControls(){
-  document.getElementById('periodChips').innerHTML = ORDER.map(k=>
-    `<button class="chip sm ${k===state.period?'on':''}" data-period="${k}">${esc(PERIODS[k].label)}</button>`).join('');
-  document.getElementById('periodLabel').textContent = PERIODS[state.period].label;
-  document.getElementById('periodNote').innerHTML = `<b>Live</b> — figures update with the selected period (${esc(PERIODS[state.period].sub)}).`;
+/* ============ RENDER: filters ============ */
+function renderMetricChips(){
+  const chips=[{k:null,l:'All'},{k:'total',l:'Total Revenue'},{k:'retention',l:'Retention'},{k:'aov',l:'AOV'},{k:'ltv',l:'LTV'},{k:'retest',l:'Retest Rate'},{k:'attach',l:'Attach Rate'}];
+  document.getElementById('metricChips').innerHTML=chips.map(c=>
+    `<button class="chip sm ${state.metric===c.k?'on':''}" data-metric="${c.k===null?'':c.k}">${esc(c.l)}</button>`).join('');
+}
+function renderOwnerChips(){
+  const all=`<button class="chip sm ${state.owners.size===0?'on':''}" data-owner="">All</button>`;
+  document.getElementById('ownerChips').innerHTML=all+OWNERS.map(o=>
+    `<button class="chip sm ${state.owners.has(o)?'on':''}" data-owner="${o}"><span class="cdot dot-${o}"></span>${o}</button>`).join('');
+}
+function renderDropdown(){
+  const btn=document.getElementById('ddBtn'); const panel=document.getElementById('ddPanel');
+  btn.textContent=(state.inits.size?state.inits.size+' selected':'All initiatives')+' ▾';
+  btn.classList.toggle('on', state.ddOpen);
+  panel.classList.toggle('open', state.ddOpen);
+  panel.innerHTML = `<button class="ddclear" data-ddclear>Clear (show all)</button>` +
+    INITIATIVES.map(i=>`<div class="ddrow ${state.inits.has(i.name)?'on':''}" data-ddinit="${esc(i.name)}"><span class="box">${state.inits.has(i.name)?'✓':''}</span>${esc(i.name)}</div>`).join('');
 }
 
-function renderFocus(){
-  const chips=[{k:null,l:'All initiatives'},{k:'total',l:'Total Revenue'},{k:'retention',l:'Retention'},{k:'aov',l:'AOV'},{k:'avgproducts',l:'Avg products/sub'},{k:'retest',l:'Retest Rate'}];
-  document.getElementById('focusChips').innerHTML = chips.map(c=>
-    `<button class="chip sm ${state.focus===c.k?'on':''}" data-focuschip="${c.k===null?'':c.k}">${esc(c.l)}</button>`).join('');
-}
+/* ============ RENDER: initiatives table ============ */
+function filtered(){ return INITIATIVES.filter(i=>
+  (!state.metric || i.drives===state.metric) &&
+  (state.owners.size===0 || state.owners.has(i.owner)) &&
+  (state.inits.size===0 || state.inits.has(i.name)) ); }
 
 function renderInits(){
-  const rows = state.focus ? INITIATIVES.filter(i=>i.drives===state.focus) : INITIATIVES;
-  const wrap = document.getElementById('initRows');
-  if(!rows.length){ wrap.innerHTML=`<div class="empty">No initiatives currently mapped to <b>${esc(DRIVES_NAME[state.focus]||state.focus)}</b> — a gap worth noting.</div>`; return; }
-  wrap.innerHTML = rows.map(i=>{
-    const sc = i.stage==='Done'?'var(--green)':i.stage==='Now'?'#000':i.stage==='Next'?'var(--blue)':'var(--muted)';
+  const rows=filtered(); const wrap=document.getElementById('initRows');
+  if(!rows.length){ wrap.innerHTML=`<div class="empty">No initiatives match the current filters.</div>`; return; }
+  wrap.innerHTML=rows.map(i=>{
+    const stCls=i.status.replace(/\s/g,'');
+    const launched=i.status==='Launched';
     return `<div class="trow">
-      <div class="nm"><span class="sdot" style="background:${sc}"></span>${esc(i.name)}</div>
-      <div><span class="stage st-${i.stage}"><span class="pd" style="background:${sc}"></span>${i.stage}</span></div>
-      <div class="drives">${esc(DRIVES_NAME[i.drives])}</div><div class="owner">${esc(i.owner)}</div>
-      <div class="tgt ph">Set target</div><div class="act">—</div>
-      <div class="prog"><div class="bar"><div class="fill" style="width:0%"></div></div><span class="pv">—</span></div>
+      <div class="nm">${esc(i.name)}</div>
+      <div><span class="badge st-${stCls}">${i.status}</span></div>
+      <div><span class="badge own-${i.owner}">${i.owner}</span></div>
+      <div><span class="qtr ${i.quarter==='TBD'?'tbd':''}">${i.quarter}</span></div>
+      <div class="drives">${DRIVES_NAME[i.drives]}</div>
+      <div class="exp ph">Set expected impact</div>
+      <div class="delta ${launched?'meas':'na'}">${launched?'measuring':'—'}</div>
+      <div class="note-c ph">Add note</div>
     </div>`;}).join('');
 }
 
+function renderControls(){
+  document.getElementById('periodChips').innerHTML=ORDER.map(k=>
+    `<button class="chip sm ${k===state.period?'on':''}" data-period="${k}">${esc(PERIODS[k].label)}</button>`).join('');
+  document.getElementById('periodLabel').textContent=PERIODS[state.period].label;
+  document.getElementById('periodNote').innerHTML=`<b>Live</b> — figures update with the selected period (${esc(PERIODS[state.period].sub)}).`;
+}
+function renderFilters(){ renderMetricChips(); renderOwnerChips(); renderDropdown(); }
+
 function renderFoot(){
   document.getElementById('foot').innerHTML =
-    `<span class="lg live">LIVE</span> updates with the selected period (Total Revenue, Retention, AOV; LTV is all-time). &nbsp;·&nbsp;
-     <span class="lg intr">INTERIM</span> Retest Rate — all-time; period-based view in development. &nbsp;·&nbsp;
-     <span class="lg ph">PENDING</span> Average Products / Subscriber — in development. &nbsp;·&nbsp;
+    `<span class="lg live">LIVE</span> updates with the selected period (Total Revenue, Retention, AOV; LTV all-time). &nbsp;·&nbsp;
+     <span class="lg intr">INTERIM</span> Retest Rate &amp; Attach Rate — all-time / Q1; period-based views in development. &nbsp;·&nbsp;
      Retention = subscription revenue as a share of total; the broader retention-revenue figure is tracked separately. &nbsp;·&nbsp;
-     Initiatives from the retention roadmap; targets in progress. &nbsp;·&nbsp; ⓘ = definition &amp; source. &nbsp;·&nbsp; As of June 2026.`;
+     Initiatives, status, owner &amp; launch quarter from the retention roadmap; quarters show TBD where not yet set. &nbsp;·&nbsp;
+     Expected impact, change-since-launch &amp; notes are owner-maintained (change-since-launch needs a pre/post read). &nbsp;·&nbsp; ⓘ = definition &amp; source. &nbsp;·&nbsp; As of June 2026.`;
 }
 
-function renderAll(){ renderControls(); renderKpis(); renderFocus(); renderInits(); }
+function renderAll(){ renderControls(); renderKpis(); renderFilters(); renderInits(); }
 
 /* ============ TOOLTIP + EVENTS ============ */
 const tip=document.getElementById('tip');
 function showTip(el){ const k=el.getAttribute('data-tip'); if(!SRC[k])return; tip.textContent=SRC[k]; tip.style.display='block';
-  const r=el.getBoundingClientRect(); let x=r.left+r.width/2-150, y=r.bottom+9; x=Math.max(10,Math.min(x,window.innerWidth-310));
+  const r=el.getBoundingClientRect(); let x=r.left+r.width/2-150,y=r.bottom+9; x=Math.max(10,Math.min(x,window.innerWidth-310));
   if(y+tip.offsetHeight>window.innerHeight-10) y=r.top-tip.offsetHeight-9; tip.style.left=x+'px'; tip.style.top=y+'px'; }
 function hideTip(){ tip.style.display='none'; }
+
 document.addEventListener('click', e=>{
   const icon=e.target.closest('.i[data-tip]');
   if(icon){ e.stopPropagation(); (tip.style.display==='block'&&tip._k===icon.getAttribute('data-tip'))?hideTip():(tip._k=icon.getAttribute('data-tip'),showTip(icon)); return; }
-  const cardEl=e.target.closest('.mcard[data-focus]');
-  if(cardEl){ const k=cardEl.getAttribute('data-focus'); state.focus=state.focus===k?null:k; renderFocus(); renderInits(); hideTip(); return; }
   const pc=e.target.closest('[data-period]'); if(pc){ state.period=pc.getAttribute('data-period'); renderControls(); renderKpis(); hideTip(); return; }
-  const fc=e.target.closest('[data-focuschip]'); if(fc){ state.focus=fc.getAttribute('data-focuschip')||null; renderFocus(); renderInits(); return; }
+  const mc=e.target.closest('[data-metric]'); if(mc){ const k=mc.getAttribute('data-metric')||null; state.metric=(state.metric===k)?null:k; renderMetricChips(); renderInits(); return; }
+  const oc=e.target.closest('[data-owner]'); if(oc){ const o=oc.getAttribute('data-owner'); if(o===''){ state.owners.clear(); } else { state.owners.has(o)?state.owners.delete(o):state.owners.add(o); } renderOwnerChips(); renderInits(); return; }
+  const db=e.target.closest('[data-ddbtn]'); if(db){ e.stopPropagation(); state.ddOpen=!state.ddOpen; renderDropdown(); return; }
+  const dc=e.target.closest('[data-ddclear]'); if(dc){ e.stopPropagation(); state.inits.clear(); renderDropdown(); renderInits(); return; }
+  const dr=e.target.closest('[data-ddinit]'); if(dr){ e.stopPropagation(); const n=dr.getAttribute('data-ddinit'); state.inits.has(n)?state.inits.delete(n):state.inits.add(n); renderDropdown(); renderInits(); return; }
+  // click elsewhere: close dropdown + tooltip
+  if(state.ddOpen && !e.target.closest('.ddwrap')){ state.ddOpen=false; renderDropdown(); }
   hideTip();
 });
 window.addEventListener('scroll', hideTip, true);
