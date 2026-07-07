@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- ABOUTME: Retention RevOps scorecard — 6 uniform metric cards over live Shopify data + a retention-roadmap initiatives table -->
-<!-- ABOUTME: with metric/owner/initiative filters, category owners, launch quarter, and expected-impact / change-since-launch / notes. -->
+<!-- ABOUTME: with Metric + Owner dropdown filters, category owners, launch quarter, and modeled expected-impact / change-since-launch / notes. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -32,7 +32,6 @@
     font:inherit;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;}
   .chip.on{background:#000;color:#fff;border-color:#000;}
   .chip.sm{height:30px;padding:0 13px;font-size:12.5px;}
-  .chip .cdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle;}
   .note{font-size:12.5px;color:var(--muted);margin:2px 0 16px;min-height:16px;}
   .note b{color:var(--muted2);font-weight:500;}
 
@@ -42,10 +41,9 @@
   .panel-h .r{font-size:13px;font-weight:300;color:var(--muted2);}
   .panel-h .r b{font-weight:500;color:#000;}
 
-  /* KPI grid — every card identical: name+badge+ⓘ / value / trend / context */
+  /* KPI grid */
   .kpis{display:grid;grid-template-columns:repeat(6,1fr);}
-  .mcard{position:relative;text-align:left;background:#fff;color:#000;font:inherit;cursor:default;
-    border:none;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+  .mcard{position:relative;background:#fff;color:#000;border:none;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
     padding:18px 18px 20px;display:flex;flex-direction:column;min-height:184px;}
   .mcard.core{background:#141821;color:#fff;}
   .m-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;min-height:44px;}
@@ -72,29 +70,28 @@
 
   /* initiatives + filters */
   .inits{padding:24px 28px 30px;}
-  .inits-h{font-size:18px;font-weight:500;margin-bottom:16px;}
-  .filters{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
-  .fgroup{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-  .fglabel{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);width:74px;flex:none;}
-  .chiprow{display:flex;gap:6px;flex-wrap:wrap;}
-  /* initiatives dropdown */
+  .inits-h{font-size:18px;font-weight:500;margin-bottom:14px;}
+  .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
   .ddwrap{position:relative;}
-  .ddbtn{height:30px;padding:0 13px;border-radius:9999px;border:1px solid #cfd0d4;background:#fff;font:inherit;font-size:12.5px;font-weight:500;cursor:pointer;}
+  .ddbtn{height:32px;padding:0 14px;border-radius:9999px;border:1px solid #cfd0d4;background:#fff;font:inherit;font-size:12.5px;font-weight:500;cursor:pointer;}
   .ddbtn.on{background:#000;color:#fff;border-color:#000;}
-  .ddpanel{position:absolute;top:36px;left:0;z-index:20;background:#fff;border:1px solid var(--line);border-radius:10px;
-    box-shadow:0 10px 34px rgba(0,0,0,.16);padding:8px;width:340px;max-height:320px;overflow:auto;display:none;}
+  .ddpanel{position:absolute;top:38px;left:0;z-index:20;background:#fff;border:1px solid var(--line);border-radius:10px;
+    box-shadow:0 10px 34px rgba(0,0,0,.16);padding:6px;width:230px;display:none;}
   .ddpanel.open{display:block;}
-  .ddclear{width:100%;text-align:left;background:none;border:none;border-bottom:1px solid var(--line);padding:6px 8px;font:inherit;font-size:11.5px;font-weight:600;color:var(--blue);cursor:pointer;margin-bottom:4px;}
-  .ddrow{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;font-size:13px;cursor:pointer;}
+  .ddrow{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;font-size:13px;cursor:pointer;}
   .ddrow:hover{background:#f4f4f5;}
   .ddrow .box{width:15px;height:15px;border:1.5px solid #cfd0d4;border-radius:4px;flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#fff;}
   .ddrow.on .box{background:#000;border-color:#000;}
+  .ddrow .radio{width:15px;height:15px;border:1.5px solid #cfd0d4;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:12px;line-height:1;color:#000;}
+  .ddrow.on .radio{border-color:#000;}
+  .cdot{width:8px;height:8px;border-radius:50%;flex:none;}
 
   .table-scroll{overflow-x:auto;}
-  .thead,.trow{display:grid;grid-template-columns:1.9fr 0.95fr 0.95fr 0.7fr 0.95fr 1.15fr 0.95fr 1.25fr;align-items:center;min-width:1080px;gap:0 10px;}
+  .thead,.trow{display:grid;grid-template-columns:1.8fr 0.85fr 0.85fr 0.6fr 0.85fr 1.15fr 0.85fr 1.7fr;align-items:start;min-width:1140px;gap:0 10px;}
   .thead{padding:0 0 10px;border-bottom:1px solid var(--line);font-size:11px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);}
   .trow{padding:13px 0;border-bottom:1px solid var(--line2);}
-  .trow .nm{font-size:13.5px;font-weight:400;}
+  .trow>div{align-self:center;}
+  .trow .nm{font-size:13.5px;font-weight:400;line-height:1.35;}
   .badge{display:inline-flex;align-items:center;gap:6px;height:23px;padding:0 9px;border-radius:9999px;font-size:11px;font-weight:600;white-space:nowrap;}
   .st-Launched{background:var(--greenBg);color:var(--green);}
   .st-InProgress{background:var(--blueBg);color:var(--blue);}
@@ -108,9 +105,10 @@
   .qtr{font-size:13px;font-weight:500;color:var(--muted2);}
   .qtr.tbd{color:#a7a8b3;font-weight:400;font-style:italic;}
   .drives{font-size:12.5px;font-weight:400;color:var(--muted2);}
-  .exp{font-size:12.5px;color:var(--muted2);} .exp.ph{color:#a7a8b3;font-style:italic;}
-  .delta{font-size:12.5px;} .delta.meas{color:var(--blue);} .delta.na{color:#a7a8b3;}
-  .note-c{font-size:12px;color:var(--muted);} .note-c.ph{color:#c2c3cc;font-style:italic;}
+  .exp{font-size:12.5px;color:var(--muted2);line-height:1.35;}
+  .delta{font-size:12.5px;}
+  .delta.up{color:var(--green);font-weight:500;} .delta.na{color:#a7a8b3;} .delta.lim{color:#a7a8b3;font-style:italic;font-size:11.5px;}
+  .note-c{font-size:11.5px;color:var(--muted);line-height:1.4;}
   .empty{padding:22px 0 4px;font-size:13px;color:var(--muted);}
 
   .foot{margin-top:20px;font-size:12px;color:var(--muted);line-height:1.7;}
@@ -146,11 +144,8 @@
     <div class="inits">
       <div class="inits-h">Initiatives driving these metrics</div>
       <div class="filters">
-        <div class="fgroup"><span class="fglabel">Metric</span><div class="chiprow" id="metricChips"></div></div>
-        <div class="fgroup"><span class="fglabel">Owner</span><div class="chiprow" id="ownerChips"></div></div>
-        <div class="fgroup"><span class="fglabel">Initiatives</span>
-          <div class="ddwrap"><button class="ddbtn" id="ddBtn" data-ddbtn>All initiatives ▾</button><div class="ddpanel" id="ddPanel"></div></div>
-        </div>
+        <div class="ddwrap"><button class="ddbtn" id="ddMetricBtn" data-dd="metric">Metric: All ▾</button><div class="ddpanel" id="ddMetric"></div></div>
+        <div class="ddwrap"><button class="ddbtn" id="ddOwnerBtn" data-dd="owner">Owner: All ▾</button><div class="ddpanel" id="ddOwner"></div></div>
       </div>
       <div class="table-scroll">
         <div class="thead">
@@ -190,32 +185,49 @@ const SRC = {
 const OWNERS = ['Lifecycle','CX','Product','Ecom','Community','Ops'];
 const DRIVES_NAME = { total:'Total Revenue', retention:'Retention', aov:'AOV', ltv:'LTV', retest:'Retest Rate', attach:'Attach Rate' };
 
-// Retention roadmap (airfocus). status: Planned / In Progress / Launched. owner = team category. quarter = launch quarter (from airfocus; TBD where unset).
-// Expected impact / Δ-since-launch / Note are owner-maintained fields (placeholders until populated).
+// Retention roadmap (airfocus). exp = modeled/directional estimate; delta = observed change since launch (— if not launched); note = context.
 const INITIATIVES = [
-  { name:'Clienteling SMS (72-hr post-results)',            status:'Launched',    owner:'Lifecycle', quarter:'Q2 2026', drives:'attach' },
-  { name:'While You Wait experience launch',                status:'Launched',    owner:'Lifecycle', quarter:'Q2 2026', drives:'retention' },
-  { name:'Okendo review program',                           status:'Launched',    owner:'Lifecycle', quarter:'Q2 2026', drives:'total' },
-  { name:'Okendo referral program ($50/$50)',               status:'In Progress', owner:'Lifecycle', quarter:'Q2 2026', drives:'total' },
-  { name:'Improve upsell email flows',                      status:'In Progress', owner:'Lifecycle', quarter:'TBD',     drives:'aov' },
-  { name:'FullStory + Klaviyo prep (behavior triggers)',    status:'In Progress', owner:'Lifecycle', quarter:'TBD',     drives:'retention' },
-  { name:'PostPilot direct mail (unattached customers)',    status:'Planned',     owner:'Lifecycle', quarter:'TBD',     drives:'attach' },
-  { name:'Loop bundling: 3 & 6-month progressive discounts',status:'Planned',     owner:'Ecom',      quarter:'TBD',     drives:'ltv' },
-  { name:'Wrapped launch w/ personalized hints',            status:'Planned',     owner:'Product',   quarter:'TBD',     drives:'attach' },
-  { name:'Campaign: time-limited fall reset attach drive',  status:'Planned',     owner:'Lifecycle', quarter:'TBD',     drives:'attach' },
-  { name:"Post-Wrapped 'cliff' contingency",                status:'Planned',     owner:'Product',   quarter:'TBD',     drives:'retention' },
-  { name:'Friends & Family review campaign (Amazon)',       status:'Planned',     owner:'Lifecycle', quarter:'TBD',     drives:'total' },
-  { name:'Open House On Demand',                            status:'Planned',     owner:'Community', quarter:'TBD',     drives:'retention' },
-  { name:'Peacock prompting (community/social)',            status:'Planned',     owner:'Community', quarter:'TBD',     drives:'retest' },
-  { name:'Claims refresh — science-backed 90-day claims',   status:'Planned',     owner:'Ops',       quarter:'TBD',     drives:'total' },
-  { name:'Loyalty & Streaks program design',                status:'Planned',     owner:'Lifecycle', quarter:'TBD',     drives:'ltv' },
-  { name:'Cancel-flow A/B → Klaviyo churn/win-back',        status:'Planned',     owner:'CX',        quarter:'TBD',     drives:'retention' },
-  { name:'Personalized Winback Flow',                       status:'Planned',     owner:'Lifecycle', quarter:'TBD',     drives:'retention' },
+  { name:'Clienteling SMS (72-hr post-results)', status:'Launched', owner:'Lifecycle', quarter:'Q2 2026', drives:'attach',
+    exp:'+1–2 pp attach', delta:'attach not time-sliced yet', note:'Live in Q2; per-period attach read pending Tableau.' },
+  { name:'While You Wait experience launch', status:'Launched', owner:'Lifecycle', quarter:'Q2 2026', drives:'retention',
+    exp:'+2–4 pp retention', delta:'+4.4 pp', note:'Launched Jun 8; retention 43.0→47.4% since (observed co-movement). Full impact ~Q3.' },
+  { name:'Okendo review program', status:'Launched', owner:'Lifecycle', quarter:'Q2 2026', drives:'total',
+    exp:'≈+$0.2–0.4M/yr', delta:'not isolatable', note:'Lifts conversion/trust; isolating from macro total needs a holdout.' },
+  { name:'Okendo referral program ($50/$50)', status:'In Progress', owner:'Lifecycle', quarter:'Q2 2026', drives:'total',
+    exp:'≈+$0.3–0.6M/yr', delta:null, note:'Ramps with participation; track revenue on referral codes.' },
+  { name:'Improve upsell email flows', status:'In Progress', owner:'Lifecycle', quarter:'TBD', drives:'aov',
+    exp:'+$3–6 AOV', delta:null, note:'In build; watch AOV on upsell-touched orders.' },
+  { name:'FullStory + Klaviyo prep (behavior triggers)', status:'In Progress', owner:'Lifecycle', quarter:'TBD', drives:'retention',
+    exp:'Enabler — multiplies retention levers', delta:null, note:'Foundational for behavior-triggered flows; target live ~Jul.' },
+  { name:'PostPilot direct mail (unattached customers)', status:'Planned', owner:'Lifecycle', quarter:'TBD', drives:'attach',
+    exp:'+0.5–1 pp attach', delta:null, note:'Direct-mail test to unattached customers; small scale first.' },
+  { name:'Loop bundling: 3 & 6-month progressive discounts', status:'Planned', owner:'Ecom', quarter:'TBD', drives:'ltv',
+    exp:'+$40–80 LTV', delta:null, note:'Progressive 3/6-mo discounts → longer commitment & LTV.' },
+  { name:'Wrapped launch w/ personalized hints', status:'Planned', owner:'Product', quarter:'TBD', drives:'attach',
+    exp:'+1–2 pp attach', delta:null, note:'Personalized year-in-review → attach; watch post-launch cliff.' },
+  { name:'Campaign: time-limited fall reset attach drive', status:'Planned', owner:'Lifecycle', quarter:'TBD', drives:'attach',
+    exp:'+0.5–1 pp attach', delta:null, note:'Time-limited campaign; expect a burst, not sustained.' },
+  { name:"Post-Wrapped 'cliff' contingency", status:'Planned', owner:'Product', quarter:'TBD', drives:'retention',
+    exp:'Protects post-campaign retention', delta:null, note:'Sustains attach after the Wrapped burst.' },
+  { name:'Friends & Family review campaign (Amazon)', status:'Planned', owner:'Lifecycle', quarter:'TBD', drives:'total',
+    exp:'≈+$0.1–0.2M/yr', delta:null, note:'Seeds GI/OHI reviews on Amazon → conversion.' },
+  { name:'Open House On Demand', status:'Planned', owner:'Community', quarter:'TBD', drives:'retention',
+    exp:'+0.5–1 pp retention', delta:null, note:'On-demand education → engagement & retention.' },
+  { name:'Peacock prompting (community/social)', status:'Planned', owner:'Community', quarter:'TBD', drives:'retest',
+    exp:'+1–2 pp retest', delta:null, note:'Prompts R&R comparison → retest (best available retest driver).' },
+  { name:'Claims refresh — science-backed 90-day claims', status:'Planned', owner:'Ops', quarter:'TBD', drives:'total',
+    exp:'≈+$0.1–0.3M/yr', delta:null, note:'90-day claims → conversion lift; needs legal/Ops.' },
+  { name:'Loyalty & Streaks program design', status:'Planned', owner:'Lifecycle', quarter:'TBD', drives:'ltv',
+    exp:'+$30–60 LTV', delta:null, note:'Loyalty/streaks → repeat & LTV; design phase.' },
+  { name:'Cancel-flow A/B → Klaviyo churn/win-back', status:'Planned', owner:'CX', quarter:'TBD', drives:'retention',
+    exp:'≈+$0.2–0.35M/yr', delta:null, note:'Proactive save + winback (re-evidence, not discount); needs CX offers + Loop data.' },
+  { name:'Personalized Winback Flow', status:'Planned', owner:'Lifecycle', quarter:'TBD', drives:'retention',
+    exp:'≈+$0.1–0.2M/yr', delta:null, note:'Reactivate lapsed subscribers with personalized re-evidence.' },
 ];
 
-let state = { period:'month', metric:null, owners:new Set(), inits:new Set(), ddOpen:false };
+let state = { period:'month', metric:null, owners:new Set(), openDD:null };
 
-/* ============ RENDER: metric cards ============ */
+/* ============ metric cards ============ */
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function trend(t){ if(t===null||t===undefined) return `<span class="flat">—</span>`;
   const up=(typeof t==='number')?t>=0:/^\+/.test(t);
@@ -226,7 +238,6 @@ function card(c){ return `<div class="mcard ${c.core?'core':''}">
     <span class="m-tools"><span class="m-badge ${c.badgeCls}">${c.badge}</span><span class="i" data-tip="${c.tip}">i</span></span></div>
   <div class="m-val">${c.value}</div><div class="m-trend">${c.trend}</div>
   <div class="m-ctx"${c.ctxColor?` style="color:${c.ctxColor}"`:''}>${c.ctx}</div></div>`; }
-
 function renderKpis(){
   const p=PERIODS[state.period]; const gap=(RETENTION_GOAL-p.retention.pct).toFixed(1);
   const retC=p.retention.pct>=RETENTION_GOAL?'var(--green)':(p.retention.pct>=53?'var(--amber)':'var(--red)');
@@ -241,47 +252,41 @@ function renderKpis(){
   document.getElementById('kpis').innerHTML=cards.map(card).join('');
 }
 
-/* ============ RENDER: filters ============ */
-function renderMetricChips(){
-  const chips=[{k:null,l:'All'},{k:'total',l:'Total Revenue'},{k:'retention',l:'Retention'},{k:'aov',l:'AOV'},{k:'ltv',l:'LTV'},{k:'retest',l:'Retest Rate'},{k:'attach',l:'Attach Rate'}];
-  document.getElementById('metricChips').innerHTML=chips.map(c=>
-    `<button class="chip sm ${state.metric===c.k?'on':''}" data-metric="${c.k===null?'':c.k}">${esc(c.l)}</button>`).join('');
-}
-function renderOwnerChips(){
-  const all=`<button class="chip sm ${state.owners.size===0?'on':''}" data-owner="">All</button>`;
-  document.getElementById('ownerChips').innerHTML=all+OWNERS.map(o=>
-    `<button class="chip sm ${state.owners.has(o)?'on':''}" data-owner="${o}"><span class="cdot dot-${o}"></span>${o}</button>`).join('');
-}
-function renderDropdown(){
-  const btn=document.getElementById('ddBtn'); const panel=document.getElementById('ddPanel');
-  btn.textContent=(state.inits.size?state.inits.size+' selected':'All initiatives')+' ▾';
-  btn.classList.toggle('on', state.ddOpen);
-  panel.classList.toggle('open', state.ddOpen);
-  panel.innerHTML = `<button class="ddclear" data-ddclear>Clear (show all)</button>` +
-    INITIATIVES.map(i=>`<div class="ddrow ${state.inits.has(i.name)?'on':''}" data-ddinit="${esc(i.name)}"><span class="box">${state.inits.has(i.name)?'✓':''}</span>${esc(i.name)}</div>`).join('');
+/* ============ filters (dropdowns) ============ */
+function renderFilters(){
+  const mBtn=document.getElementById('ddMetricBtn'), mP=document.getElementById('ddMetric');
+  mBtn.textContent='Metric: '+(state.metric?DRIVES_NAME[state.metric]:'All')+' ▾'; mBtn.classList.toggle('on',state.openDD==='metric'); mP.classList.toggle('open',state.openDD==='metric');
+  const mOpts=[{k:null,l:'All'},{k:'total',l:'Total Revenue'},{k:'retention',l:'Retention'},{k:'aov',l:'AOV'},{k:'ltv',l:'LTV'},{k:'retest',l:'Retest Rate'},{k:'attach',l:'Attach Rate'}];
+  mP.innerHTML=mOpts.map(o=>`<div class="ddrow ${state.metric===o.k?'on':''}" data-msel="${o.k===null?'':o.k}"><span class="radio">${state.metric===o.k?'●':''}</span>${esc(o.l)}</div>`).join('');
+  const oBtn=document.getElementById('ddOwnerBtn'), oP=document.getElementById('ddOwner');
+  oBtn.textContent='Owner: '+(state.owners.size?state.owners.size+' selected':'All')+' ▾'; oBtn.classList.toggle('on',state.openDD==='owner'); oP.classList.toggle('open',state.openDD==='owner');
+  oP.innerHTML=`<div class="ddrow ${state.owners.size===0?'on':''}" data-oall><span class="box">${state.owners.size===0?'✓':''}</span>All owners</div>`+
+    OWNERS.map(o=>`<div class="ddrow ${state.owners.has(o)?'on':''}" data-osel="${o}"><span class="box">${state.owners.has(o)?'✓':''}</span><span class="cdot dot-${o}"></span>${o}</div>`).join('');
 }
 
-/* ============ RENDER: initiatives table ============ */
+/* ============ initiatives table ============ */
 function filtered(){ return INITIATIVES.filter(i=>
   (!state.metric || i.drives===state.metric) &&
-  (state.owners.size===0 || state.owners.has(i.owner)) &&
-  (state.inits.size===0 || state.inits.has(i.name)) ); }
-
+  (state.owners.size===0 || state.owners.has(i.owner)) ); }
+function deltaCell(dv){
+  if(dv===null||dv===undefined) return `<span class="delta na">—</span>`;
+  if(/^\+/.test(dv)) return `<span class="delta up">▲ ${esc(dv)}</span>`;
+  return `<span class="delta lim">${esc(dv)}</span>`;
+}
 function renderInits(){
   const rows=filtered(); const wrap=document.getElementById('initRows');
   if(!rows.length){ wrap.innerHTML=`<div class="empty">No initiatives match the current filters.</div>`; return; }
   wrap.innerHTML=rows.map(i=>{
     const stCls=i.status.replace(/\s/g,'');
-    const launched=i.status==='Launched';
     return `<div class="trow">
       <div class="nm">${esc(i.name)}</div>
       <div><span class="badge st-${stCls}">${i.status}</span></div>
       <div><span class="badge own-${i.owner}">${i.owner}</span></div>
       <div><span class="qtr ${i.quarter==='TBD'?'tbd':''}">${i.quarter}</span></div>
       <div class="drives">${DRIVES_NAME[i.drives]}</div>
-      <div class="exp ph">Set expected impact</div>
-      <div class="delta ${launched?'meas':'na'}">${launched?'measuring':'—'}</div>
-      <div class="note-c ph">Add note</div>
+      <div class="exp">${esc(i.exp)}</div>
+      <div>${deltaCell(i.delta)}</div>
+      <div class="note-c">${esc(i.note)}</div>
     </div>`;}).join('');
 }
 
@@ -291,20 +296,18 @@ function renderControls(){
   document.getElementById('periodLabel').textContent=PERIODS[state.period].label;
   document.getElementById('periodNote').innerHTML=`<b>Live</b> — figures update with the selected period (${esc(PERIODS[state.period].sub)}).`;
 }
-function renderFilters(){ renderMetricChips(); renderOwnerChips(); renderDropdown(); }
 
 function renderFoot(){
   document.getElementById('foot').innerHTML =
     `<span class="lg live">LIVE</span> updates with the selected period (Total Revenue, Retention, AOV; LTV all-time). &nbsp;·&nbsp;
      <span class="lg intr">INTERIM</span> Retest Rate &amp; Attach Rate — all-time / Q1; period-based views in development. &nbsp;·&nbsp;
      Retention = subscription revenue as a share of total; the broader retention-revenue figure is tracked separately. &nbsp;·&nbsp;
-     Initiatives, status, owner &amp; launch quarter from the retention roadmap; quarters show TBD where not yet set. &nbsp;·&nbsp;
-     Expected impact, change-since-launch &amp; notes are owner-maintained (change-since-launch needs a pre/post read). &nbsp;·&nbsp; ⓘ = definition &amp; source. &nbsp;·&nbsp; As of June 2026.`;
+     Initiatives, status, owner &amp; quarter from the retention roadmap. &nbsp;·&nbsp;
+     <b>Expected impact</b> = modeled / directional estimates. <b>Δ since launch</b> = observed movement in the driven metric (co-movement, not isolated attribution); "—" = not yet launched. &nbsp;·&nbsp; ⓘ = definition &amp; source. &nbsp;·&nbsp; As of June 2026.`;
 }
-
 function renderAll(){ renderControls(); renderKpis(); renderFilters(); renderInits(); }
 
-/* ============ TOOLTIP + EVENTS ============ */
+/* ============ tooltip + events ============ */
 const tip=document.getElementById('tip');
 function showTip(el){ const k=el.getAttribute('data-tip'); if(!SRC[k])return; tip.textContent=SRC[k]; tip.style.display='block';
   const r=el.getBoundingClientRect(); let x=r.left+r.width/2-150,y=r.bottom+9; x=Math.max(10,Math.min(x,window.innerWidth-310));
@@ -315,13 +318,11 @@ document.addEventListener('click', e=>{
   const icon=e.target.closest('.i[data-tip]');
   if(icon){ e.stopPropagation(); (tip.style.display==='block'&&tip._k===icon.getAttribute('data-tip'))?hideTip():(tip._k=icon.getAttribute('data-tip'),showTip(icon)); return; }
   const pc=e.target.closest('[data-period]'); if(pc){ state.period=pc.getAttribute('data-period'); renderControls(); renderKpis(); hideTip(); return; }
-  const mc=e.target.closest('[data-metric]'); if(mc){ const k=mc.getAttribute('data-metric')||null; state.metric=(state.metric===k)?null:k; renderMetricChips(); renderInits(); return; }
-  const oc=e.target.closest('[data-owner]'); if(oc){ const o=oc.getAttribute('data-owner'); if(o===''){ state.owners.clear(); } else { state.owners.has(o)?state.owners.delete(o):state.owners.add(o); } renderOwnerChips(); renderInits(); return; }
-  const db=e.target.closest('[data-ddbtn]'); if(db){ e.stopPropagation(); state.ddOpen=!state.ddOpen; renderDropdown(); return; }
-  const dc=e.target.closest('[data-ddclear]'); if(dc){ e.stopPropagation(); state.inits.clear(); renderDropdown(); renderInits(); return; }
-  const dr=e.target.closest('[data-ddinit]'); if(dr){ e.stopPropagation(); const n=dr.getAttribute('data-ddinit'); state.inits.has(n)?state.inits.delete(n):state.inits.add(n); renderDropdown(); renderInits(); return; }
-  // click elsewhere: close dropdown + tooltip
-  if(state.ddOpen && !e.target.closest('.ddwrap')){ state.ddOpen=false; renderDropdown(); }
+  const dd=e.target.closest('[data-dd]'); if(dd){ e.stopPropagation(); const k=dd.getAttribute('data-dd'); state.openDD=state.openDD===k?null:k; renderFilters(); return; }
+  const ms=e.target.closest('[data-msel]'); if(ms){ e.stopPropagation(); state.metric=ms.getAttribute('data-msel')||null; state.openDD=null; renderFilters(); renderInits(); return; }
+  const oa=e.target.closest('[data-oall]'); if(oa){ e.stopPropagation(); state.owners.clear(); renderFilters(); renderInits(); return; }
+  const os=e.target.closest('[data-osel]'); if(os){ e.stopPropagation(); const o=os.getAttribute('data-osel'); state.owners.has(o)?state.owners.delete(o):state.owners.add(o); renderFilters(); renderInits(); return; }
+  if(state.openDD && !e.target.closest('.filters')){ state.openDD=null; renderFilters(); }
   hideTip();
 });
 window.addEventListener('scroll', hideTip, true);
