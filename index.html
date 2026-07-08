@@ -86,12 +86,15 @@
   .ddrow.on .radio{border-color:#000;}
   .cdot{width:8px;height:8px;border-radius:50%;flex:none;}
 
+  .scrollx-top{overflow-x:auto;overflow-y:hidden;height:14px;position:sticky;top:0;z-index:6;background:var(--panel);}
+  #scrollxSpacer{height:1px;}
   .table-scroll{overflow-x:auto;}
-  .thead,.trow{display:grid;grid-template-columns:1.8fr 0.85fr 0.85fr 0.6fr 0.85fr 1.15fr 0.85fr 1.7fr;align-items:start;min-width:1140px;gap:0 10px;}
-  .thead{padding:0 0 10px;border-bottom:1px solid var(--line);font-size:11px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);}
+  .thead,.trow{display:grid;grid-template-columns:1.8fr 0.9fr 0.9fr 0.6fr 0.85fr 1.15fr 0.85fr 1.6fr;align-items:start;gap:0 10px;min-width:1160px;}
+  .thead>div,.trow>div{min-width:0;}
+  .thead{padding:0 0 10px;border-bottom:1px solid var(--line);font-size:10.5px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);}
   .trow{padding:13px 0;border-bottom:1px solid var(--line2);}
   .trow>div{align-self:center;}
-  .trow .nm{font-size:13.5px;font-weight:400;line-height:1.35;}
+  .trow .nm{font-size:13px;font-weight:400;line-height:1.35;}
   .badge{display:inline-flex;align-items:center;gap:6px;height:23px;padding:0 9px;border-radius:9999px;font-size:11px;font-weight:600;white-space:nowrap;}
   .st-Launched{background:var(--greenBg);color:var(--green);}
   .st-InProgress{background:var(--blueBg);color:var(--blue);}
@@ -147,7 +150,8 @@
         <div class="ddwrap"><button class="ddbtn" id="ddMetricBtn" data-dd="metric">Metric: All ▾</button><div class="ddpanel" id="ddMetric"></div></div>
         <div class="ddwrap"><button class="ddbtn" id="ddOwnerBtn" data-dd="owner">Owner: All ▾</button><div class="ddpanel" id="ddOwner"></div></div>
       </div>
-      <div class="table-scroll">
+      <div class="scrollx-top" id="scrollxTop"><div id="scrollxSpacer"></div></div>
+      <div class="table-scroll" id="tableScroll">
         <div class="thead">
           <div>Initiative</div><div>Status</div><div>Owner</div><div>Quarter</div><div>Drives</div>
           <div>Expected impact</div><div>Δ since launch</div><div>Note</div>
@@ -328,6 +332,17 @@ document.addEventListener('click', e=>{
 window.addEventListener('scroll', hideTip, true);
 
 renderFoot(); renderAll();
+
+/* floating (sticky) top scrollbar synced with the table's horizontal scroll */
+(function(){
+  const ts=document.getElementById('tableScroll'), st=document.getElementById('scrollxTop'), sp=document.getElementById('scrollxSpacer');
+  if(!ts||!st||!sp) return;
+  const setW=()=>{ sp.style.width=ts.scrollWidth+'px'; };
+  setW(); window.addEventListener('resize', setW);
+  let lock=false;
+  st.addEventListener('scroll',()=>{ if(lock)return; lock=true; ts.scrollLeft=st.scrollLeft; lock=false; });
+  ts.addEventListener('scroll',()=>{ if(lock)return; lock=true; st.scrollLeft=ts.scrollLeft; lock=false; });
+})();
 </script>
 </body>
 </html>
