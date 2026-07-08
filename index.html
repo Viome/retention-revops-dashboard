@@ -58,8 +58,13 @@
   .m-trend{font-size:11.5px;font-weight:400;margin-top:7px;}
   .up{color:var(--green);} .down{color:var(--red);} .flat{color:var(--muted);}
   .mcard.core .flat{color:#8b93a6;}
-  .m-ctx{font-size:11.5px;font-weight:400;color:var(--muted);margin-top:auto;padding-top:12px;}
+  .m-ctx{font-size:11.5px;font-weight:400;color:var(--muted);margin-top:auto;padding-top:10px;}
   .mcard.core .m-ctx{color:#8b93a6;}
+  .m-goal{font-size:11.5px;font-weight:500;margin-top:6px;padding-top:6px;border-top:1px solid var(--line2);}
+  .mcard.core .m-goal{border-top-color:#2b3346;}
+  .m-goal .gl{font-size:9px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-right:5px;}
+  .mcard.core .m-goal .gl{color:#8b93a6;}
+  .m-goal.unset{color:#a7a8b3;font-weight:400;font-style:italic;}
 
   .i{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;
     background:#e2e2e6;color:#5b5c66;font-size:9px;font-weight:700;font-style:italic;font-family:Georgia,serif;cursor:pointer;user-select:none;flex:none;}
@@ -241,17 +246,20 @@ function card(c){ return `<div class="mcard ${c.core?'core':''}">
   <div class="m-top"><span class="m-name">${c.name}</span>
     <span class="m-tools"><span class="m-badge ${c.badgeCls}">${c.badge}</span><span class="i" data-tip="${c.tip}">i</span></span></div>
   <div class="m-val">${c.value}</div><div class="m-trend">${c.trend}</div>
-  <div class="m-ctx"${c.ctxColor?` style="color:${c.ctxColor}"`:''}>${c.ctx}</div></div>`; }
+  <div class="m-ctx"${c.ctxColor?` style="color:${c.ctxColor}"`:''}>${c.ctx}</div>
+  <div class="m-goal ${c.goal?'':'unset'}"><span class="gl">Goal / Budget</span>${c.goal?c.goal:'not set — owner input needed'}</div></div>`; }
 function renderKpis(){
   const p=PERIODS[state.period]; const gap=(RETENTION_GOAL-p.retention.pct).toFixed(1);
   const retC=p.retention.pct>=RETENTION_GOAL?'var(--green)':(p.retention.pct>=53?'var(--amber)':'var(--red)');
   const cards=[
-    { core:true, name:'Total Revenue', badge:'CORE', badgeCls:'core', tip:'total', value:p.total.v, trend:trend(p.total.t), ctx:'FY26 target $45M · −$6.0M behind', ctxColor:'#ff8a94' },
-    { name:'Retention Revenue', badge:'LIVE', badgeCls:'live', tip:'retention', value:p.retention.pct.toFixed(1)+'%', trend:trend(p.retention.t), ctx:`Goal ${RETENTION_GOAL}% · at risk (−${gap}pp)`, ctxColor:retC },
-    { name:'AOV', badge:'LIVE', badgeCls:'live', tip:'aov', value:p.aov.v, trend:trend(p.aov.t), ctx:'across all channels' },
-    { name:'LTV', badge:'LIVE', badgeCls:'live', tip:'ltv', value:LTV, trend:'<span class="flat">all-time</span>', ctx:'blended lifetime / customer' },
-    { name:'Retest Rate', badge:'INTERIM', badgeCls:'interim', tip:'retest', value:'17.0%', trend:'<span class="flat">all-time</span>', ctx:'period view in development', ctxColor:'var(--blue)' },
-    { name:'Attach Rate', badge:'INTERIM', badgeCls:'interim', tip:'attach', value:'29.1%', trend:'<span class="flat">Q1 2026</span>', ctx:'results → supplement · in development', ctxColor:'var(--blue)' },
+    { core:true, name:'Total Revenue', badge:'CORE', badgeCls:'core', tip:'total', value:p.total.v, trend:trend(p.total.t), ctx:'all sales channels',
+      goal:'$45M FY26 · <span style="color:#ff8a94">−$6.0M vs plan YTD</span>' },
+    { name:'Retention Revenue', badge:'LIVE', badgeCls:'live', tip:'retention', value:p.retention.pct.toFixed(1)+'%', trend:trend(p.retention.t), ctx:'subscription share of total',
+      goal:`${RETENTION_GOAL}% · <span style="color:${retC}">−${gap}pp to goal</span>` },
+    { name:'AOV', badge:'LIVE', badgeCls:'live', tip:'aov', value:p.aov.v, trend:trend(p.aov.t), ctx:'across all channels', goal:null },
+    { name:'LTV', badge:'LIVE', badgeCls:'live', tip:'ltv', value:LTV, trend:'<span class="flat">all-time</span>', ctx:'blended lifetime / customer', goal:null },
+    { name:'Retest Rate', badge:'INTERIM', badgeCls:'interim', tip:'retest', value:'17.0%', trend:'<span class="flat">all-time</span>', ctx:'period view in development', ctxColor:'var(--blue)', goal:null },
+    { name:'Attach Rate', badge:'INTERIM', badgeCls:'interim', tip:'attach', value:'29.1%', trend:'<span class="flat">Q1 2026</span>', ctx:'results → supplement', ctxColor:'var(--blue)', goal:null },
   ];
   document.getElementById('kpis').innerHTML=cards.map(card).join('');
 }
@@ -306,6 +314,7 @@ function renderFoot(){
     `<span class="lg live">LIVE</span> updates with the selected period (Total Revenue, Retention, AOV; LTV all-time). &nbsp;·&nbsp;
      <span class="lg intr">INTERIM</span> Retest Rate &amp; Attach Rate — all-time / Q1; period-based views in development. &nbsp;·&nbsp;
      Retention = subscription revenue as a share of total; the broader retention-revenue figure is tracked separately. &nbsp;·&nbsp;
+     <b>Goal / Budget</b> shows committed targets where set (Total Revenue: FY plan; Retention: 60% goal); metrics marked "not set" are pending owner input. &nbsp;·&nbsp;
      Initiatives, status, owner &amp; quarter from the retention roadmap. &nbsp;·&nbsp;
      <b>Expected impact</b> = modeled / directional estimates. <b>Δ since launch</b> = observed movement in the driven metric (co-movement, not isolated attribution); "—" = not yet launched. &nbsp;·&nbsp; ⓘ = definition &amp; source. &nbsp;·&nbsp; As of June 2026.`;
 }
